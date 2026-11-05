@@ -206,18 +206,17 @@ def test_sample_metrics(tmp_path: Path) -> None:
     assert "Выручка" in out.read_text(encoding="utf-8")
 
 
-def test_bitrix_link_path_in_all_chats() -> None:
-    """Bitrix24 webhook link is the main path in every chat; old 'Claude Code only' text is gone."""
+def test_no_webhook_references() -> None:
+    """Webhook links are removed; MCP and file are the data paths."""
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     src = (SKILL / "references/sources.md").read_text(encoding="utf-8")
     chat = (REPO / "chat-instruction.md").read_text(encoding="utf-8")
     for text in (skill, src, chat):
+        assert "вебхук Битрикс24" not in text
         assert "только Claude Code" not in text
         assert "не подключаем Битрикс24 напрямую" not in text
-    assert "Ссылка вебхука — основной путь, в любом чате" in src
-    assert "генераторе запросов" in src and "`next`" in src and "50 записей" in src
-    assert "URLs you've shared" in src
-    assert "каждый раз руками" in skill  # Excel is the honest last fallback
+    # MCP is the approved Bitrix24 path
+    assert "MCP" in src
 
 
 VERSION = "0.3.0"
@@ -362,12 +361,9 @@ def test_plugin_has_no_hooks_or_install_scripts() -> None:
 def test_security_warnings_present() -> None:
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     readme = (REPO / "README.md").read_text(encoding="utf-8")
-    pub = (SKILL / "references/publish.md").read_text(encoding="utf-8")
-    for text in (skill, pub):
-        assert "может открыть любой, у кого она есть" in text
-    assert "Ключ внутри ссылки вебхука — это и есть доступ" in skill
-    assert "отдельный сотрудник" in skill and "«Чтение»" in skill
-    assert "Ключ внутри ссылки" in readme and "только на чтение" in readme
+    # Published link warning: anyone with the link can open the page
+    assert "Любой, у кого есть ссылка, сможет открыть страницу без пароля" in skill
+    assert "только на чтение" in readme
 
 
 # --- Main principle -----------------------------------------------------------------------
@@ -375,10 +371,9 @@ def test_security_warnings_present() -> None:
 
 def test_main_principle_in_skill_and_readme() -> None:
     skill = (SKILL / "SKILL.md").read_text(encoding="utf-8")
-    pub = (SKILL / "references/publish.md").read_text(encoding="utf-8")
     readme = (REPO / "README.md").read_text(encoding="utf-8")
     assert "### Шаг 0. Постоянное место" in skill
-    assert "**этот же** артефакт" in skill and "## Автообновление" in pub
+    assert "**этот же** артефакт" in skill
     assert "каждый раз руками" in readme
     assert "| Где | Что делаешь один раз | Что делаешь каждый раз |" in readme
     for who in ("| Claude |", "| ChatGPT |", "| DeepSeek |"):

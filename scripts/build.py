@@ -3,7 +3,7 @@
 Produces:
   dist/puls.zip        -- skill folder for upload to claude.ai (puls/ is the zip root).
   chat-instruction.md  -- SKILL.md + references + template merged into one text for
-                          ChatGPT / DeepSeek (paste as first message or attach as file).
+                          ChatGPT / Codex (add to project files or paste as first message).
 
 Usage: python3 scripts/build.py
 """
@@ -25,7 +25,6 @@ DIST = REPO / "dist"
 REFERENCES: list[tuple[str, str]] = [
     ("references/sources.md", "Приложение 1. Подключение источников данных"),
     ("references/metrics.md", "Приложение 2. Готовые наборы цифр и правила расчёта"),
-    ("references/publish.md", "Приложение 3. Постоянное место, ссылка и автообновление"),
 ]
 TEMPLATE = "templates/dashboard.html"
 ZIP_DATE = (2026, 1, 1, 0, 0, 0)
@@ -78,14 +77,11 @@ def build_chat_instruction(skill_dir: Path, out: Path) -> Path:
     parts = [
         "# Инструкция для чата: капсула «Пульс» от labopsai",
         "",
-        "Один раз: в ChatGPT создай проект «Пульс» и добавь этот файл в файлы проекта; "
-        "в DeepSeek вставь этот текст первым сообщением в чат «Пульс» (или приложи файлом "
-        "и напиши: «Работай по этой инструкции»). Дальше пиши в том же проекте или чате "
-        "одну фразу: «обнови пульс».",
+        "Добавь этот файл в файлы проекта ChatGPT или Codex "
+        "и напиши: «Работай по инструкции из файлов проекта». Дальше — одна фраза: «обнови пульс».",
         "",
-        "Ты работаешь в обычном чате. Источники данных: встроенный коннектор (если он есть "
-        "в этом чате), ссылка, которую прислал пользователь (вебхук Битрикс24, Google Таблица), "
-        "или загруженный файл. Других доступов к системам пользователя у тебя нет.",
+        "Ты работаешь в обычном чате. Источники данных: встроенный коннектор или MCP "
+        "(если настроено), загруженный файл или текст. Других доступов к системам пользователя у тебя нет.",
         "",
         "---",
         "",

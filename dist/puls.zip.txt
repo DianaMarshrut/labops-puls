@@ -1,6 +1,5 @@
-sha256 3e45029ee7a6fafc1c251a48044bad01e1aef5cc2ccfeca3107e1ed0500637ac
+sha256 adee907c9a611e5e0e7e530b60a7cf4e0be868983392bd721cac68c039f08cda
 puls/SKILL.md
 puls/references/metrics.md
-puls/references/publish.md
 puls/references/sources.md
 puls/templates/dashboard.html
